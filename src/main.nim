@@ -111,6 +111,7 @@ proc main =
 
   var root = Node.new("root")
 
+  # parse input and create tree structure
   for line in stdinStream.lines:
     let files = line.strip.split(pathSeperator)
     var node = root
