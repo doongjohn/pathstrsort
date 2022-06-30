@@ -1,6 +1,6 @@
 # this program sorts path strings
 # - it assumes there are no duplicate file names (in a same directory)
-# - it assumes there are no empty directories (everything is a file path)
+# - it assumes there are no empty directories
 
 # TODO:
 # - [ ] implement several sorting options
