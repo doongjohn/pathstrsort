@@ -5,7 +5,7 @@ this program sorts path strings
 - it assumes there are no duplicate file names (in a same directory)
 - it assumes there are no empty directories
 
-exampe: sorting `nim/nimdoc/`
+exampe: sorting [`nim/nimdoc/`](https://github.com/nim-lang/Nim/tree/devel/nimdoc)
 
 `fd -t=f`
 ```
