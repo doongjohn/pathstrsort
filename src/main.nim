@@ -26,7 +26,7 @@ template sortPathsGroupDirFirst(paths: var seq[string]) =
     if a > b: return 1
     if a < b: return 0
 
-template sortPathsGroupDirLast(flatList: var seq[string]) =
+template sortPathsGroupDirLast(paths: var seq[string]) =
   paths.sort do (a, b: string) -> int:
     result = 1
     let aSepCount = a.count(pathSeperator)
