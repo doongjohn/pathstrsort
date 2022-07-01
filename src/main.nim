@@ -17,37 +17,43 @@ var pathSeperator =
   else:
     '/'
 
+proc startsWith(str: string, prefix: openArray[char]): bool =
+  if prefix.len > str.len:
+    return false
+
+  for i in 0 .. str.high:
+    if prefix.high == i:
+      return true
+    if str[i] != prefix[i]:
+      return false
+
 template sortPathsGroupDirFirst(paths: var seq[string]) =
   paths.sort do (a, b: string) -> int:
-    result = 1
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
     if aSepCount != 0 and bSepCount != 0:
-      let aUntilLastSep = a[0 .. a.rfind(pathSeperator)]
-      let bUntilLastSep = b[0 .. b.rfind(pathSeperator)]
-      if b.startsWith(aUntilLastSep): return 1
-      if a.startsWith(bUntilLastSep): return 0
+      if b.startsWith(a.toOpenArray(0, a.rfind(pathSeperator))): return 1
+      if a.startsWith(b.toOpenArray(0, b.rfind(pathSeperator))): return 0
     if aSepCount + bSepCount != 0:
       if aSepCount == 0: return 1
       if bSepCount == 0: return 0
     if a > b: return 1
     if a < b: return 0
+    result = 1
 
 template sortPathsGroupDirLast(paths: var seq[string]) =
   paths.sort do (a, b: string) -> int:
-    result = 1
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
     if aSepCount != 0 and bSepCount != 0:
-      let aUntilLastSep = a[0 .. a.rfind(pathSeperator)]
-      let bUntilLastSep = b[0 .. b.rfind(pathSeperator)]
-      if b.startsWith(aUntilLastSep): return 0
-      if a.startsWith(bUntilLastSep): return 1
+      if b.startsWith(a.toOpenArray(0, a.rfind(pathSeperator))): return 0
+      if a.startsWith(b.toOpenArray(0, b.rfind(pathSeperator))): return 1
     if aSepCount + bSepCount != 0:
       if aSepCount == 0: return 0
       if bSepCount == 0: return 1
     if a > b: return 1
     if a < b: return 0
+    result = 1
 
 proc main =
   # for i in 1 .. paramCount():
