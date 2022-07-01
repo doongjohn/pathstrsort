@@ -14,6 +14,7 @@ import cligen
 
 {.experimental:"views".}
 
+# options
 var pathSeperator: char
 
 proc main =
@@ -37,7 +38,8 @@ proc main =
   for line in paths:
     echo line
 
-proc opt(seperator: char = '\0') =
+proc pathstrsort(seperator: char = '\0') =
+  # apply options
   if seperator != '\0':
     pathSeperator = seperator
   else:
@@ -46,7 +48,8 @@ proc opt(seperator: char = '\0') =
   # run program
   main()
 
-dispatch opt, help = {
+# parse options
+dispatch pathstrsort, help = {
   "seperator":
     "set path seperator\n" &
     "default value for windows = \'\\\'\n" &
