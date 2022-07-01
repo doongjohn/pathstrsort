@@ -1,6 +1,8 @@
 import std/algorithm
 import std/strutils
 
+{.experimental:"views".}
+
 proc startsWith(str: string, prefix: openArray[char]): bool =
   if prefix.len > str.len:
     return false
@@ -11,7 +13,7 @@ proc startsWith(str: string, prefix: openArray[char]): bool =
     if str[i] != prefix[i]:
       return false
 
-template sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) =
+proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inline.} =
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
@@ -33,7 +35,7 @@ template sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) =
     if a > b: return 1
     if a < b: return 0
 
-template sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) =
+proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inline.} =
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)

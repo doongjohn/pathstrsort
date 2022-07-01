@@ -12,8 +12,6 @@ import std/terminal
 import sorter
 import cligen
 
-{.experimental:"views".}
-
 # options
 var pathSeperator: char
 
