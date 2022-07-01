@@ -9,7 +9,10 @@ import std/algorithm
 import std/strutils
 import std/tables
 import std/streams
-# import std/os
+import std/os
+import std/terminal
+
+{.experimental:"views".}
 
 var pathSeperator =
   when defined(windows):
@@ -32,30 +35,43 @@ template sortPathsGroupDirFirst(paths: var seq[string]) =
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
     if aSepCount != 0 and bSepCount != 0:
-      if b.startsWith(a.toOpenArray(0, a.rfind(pathSeperator))): return 1
-      if a.startsWith(b.toOpenArray(0, b.rfind(pathSeperator))): return 0
+      let aUntilSep = a.toOpenArray(0, a.rfind(pathSeperator))
+      let bUntilSep = b.toOpenArray(0, b.rfind(pathSeperator))
+      if aUntilSep == bUntilSep:
+        if a > b: return 1
+        if a < b: return 0
+      if a.startsWith(bUntilSep): return 0
+      if b.startsWith(aUntilSep): return 1
     if aSepCount + bSepCount != 0:
       if aSepCount == 0: return 1
       if bSepCount == 0: return 0
     if a > b: return 1
     if a < b: return 0
-    result = 1
 
 template sortPathsGroupDirLast(paths: var seq[string]) =
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
     if aSepCount != 0 and bSepCount != 0:
-      if b.startsWith(a.toOpenArray(0, a.rfind(pathSeperator))): return 0
-      if a.startsWith(b.toOpenArray(0, b.rfind(pathSeperator))): return 1
+      let aUntilSep = a.toOpenArray(0, a.rfind(pathSeperator))
+      let bUntilSep = b.toOpenArray(0, b.rfind(pathSeperator))
+      if aUntilSep == bUntilSep:
+        if a > b: return 1
+        if a < b: return 0
+      if a.startsWith(bUntilSep): return 1
+      if b.startsWith(aUntilSep): return 0
     if aSepCount + bSepCount != 0:
       if aSepCount == 0: return 0
       if bSepCount == 0: return 1
     if a > b: return 1
     if a < b: return 0
-    result = 1
 
 proc main =
+  if stdin.isatty():
+    echo "error: you need to pass data via pipe"
+    echo "       for example: fd -t=f | pathstrsort"
+    quit(1)
+
   # for i in 1 .. paramCount():
   #   echo paramStr(i)
 
