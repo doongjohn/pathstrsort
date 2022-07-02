@@ -11,6 +11,7 @@ namedBin["main"] = "pathstrsort"
 # Dependencies
 
 requires "nim >= 1.7.1"
+requires "faststreams"
 requires "cligen"
 
 task release, "release build":

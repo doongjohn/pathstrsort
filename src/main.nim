@@ -7,10 +7,10 @@
 
 import std/tables
 import std/strutils
-import std/streams
 import std/terminal
 import sorter
-import fastio
+import faststreams
+import faststreams/textio
 import cligen
 
 # options
@@ -23,7 +23,7 @@ proc main =
     echo "       for example: fd -t=f | pathstrsort"
     quit(1)
 
-  let stdinStream = newFileStream(stdin)
+  let stdinStream = fileInput(stdin)
   defer: close stdinStream
 
   # read input
@@ -42,9 +42,13 @@ proc main =
   else:
     discard
 
+  let stdoutStream = fileOutput(stdout)
+  defer: close stdoutStream
+
   # output result
   for line in paths:
-    stdoutWriteLine(line)
+    stdoutStream.write(line)
+    stdoutStream.write('\n')
 
 proc pathstrsort(
   seperator = '\0',
