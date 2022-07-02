@@ -8,7 +8,7 @@ when defined(linux):
 
 template stdoutWriteLine*(str: string) =
   when defined(linux):
-    discard write(1.cint, str[0].addr, str.len.cint)
-    discard write(1.cint, newLine.addr, 1.cint)
+    discard write(1.cint, str[0].addr, str.len)
+    discard write(1.cint, newLine.addr, 1)
   else:
     stdout.writeLine(str)
