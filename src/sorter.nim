@@ -13,6 +13,11 @@ proc startsWith(str: string, prefix: openArray[char]): bool =
     if str[i] != prefix[i]:
       return false
 
+proc sortPathsAscii*(paths: var seq[string]) {.inline.} =
+  paths.sort do (a, b: string) -> int:
+    if a > b: return 1
+    if a < b: return 0
+
 proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inline.} =
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)

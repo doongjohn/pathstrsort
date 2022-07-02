@@ -13,7 +13,8 @@ import sorter
 import cligen
 
 # options
-var pathSeperator: char
+var optSeperator: char
+var optGroupDir: char
 
 proc main =
   if stdin.isatty():
@@ -30,18 +31,33 @@ proc main =
     paths.add(strip(line))
 
   # sort paths
-  paths.sortPathsGroupDirFirst(pathSeperator)
+  case optGroupDir:
+  of 'n':
+    paths.sortPathsAscii()
+  of 'f':
+    paths.sortPathsGroupDirFirst(optSeperator)
+  of 'l':
+    paths.sortPathsGroupDirLast(optSeperator)
+  else:
+    discard
 
   # output result
   for line in paths:
     echo line
 
-proc pathstrsort(seperator: char = '\0') =
+proc pathstrsort(seperator = '\0', groupDir = 'f') =
   # apply options
   if seperator != '\0':
-    pathSeperator = seperator
+    optSeperator = seperator
   else:
-    pathSeperator = when defined(windows): '\\' else: '/'
+    optSeperator = when defined(windows): '\\' else: '/'
+
+  if groupDir in ['f', 'l', 'n']:
+    optGroupDir = groupDir
+  else:
+    echo "error: invalid option for groupDir"
+    echo "       must be one of ['f', 'l', 'n']"
+    quit(1)
 
   # run program
   main()
@@ -50,6 +66,11 @@ proc pathstrsort(seperator: char = '\0') =
 dispatch pathstrsort, help = {
   "seperator":
     "set path seperator\n" &
-    "default value for windows = \'\\\'\n" &
-    "default value for linux = \'/\'"
+    "  default for windows     = \'\\\'\n" &
+    "  default for non-windows = \'/\'",
+  "groupDir":
+    "set directory grouping option\n" &
+    "  (default) f => group first (group before files)\n" &
+    "            l => group last  (group after files)\n" &
+    "            n => no grouping"
 }
