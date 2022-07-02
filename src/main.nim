@@ -45,7 +45,10 @@ proc main =
   for line in paths:
     echo line
 
-proc pathstrsort(seperator = '\0', groupDir = 'f') =
+proc pathstrsort(
+  seperator = '\0',
+  groupDir = 'f'
+) =
   # apply options
   if seperator != '\0':
     optSeperator = seperator
