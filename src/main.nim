@@ -50,7 +50,7 @@ proc main =
     stdoutStream.write(line)
     stdoutStream.write('\n')
 
-proc pathstrsort(
+proc entry(
   seperator = '\0',
   groupDir = 'f'
 ) =
@@ -71,14 +71,15 @@ proc pathstrsort(
   main()
 
 # parse options
-dispatch pathstrsort, help = {
-  "seperator":
-    "set path seperator\n" &
-    "  default for windows     = '\\'\n" &
-    "  default for non-windows = '/'",
-  "groupDir":
-    "set directory grouping option\n" &
-    "  (default) f => group first (group before files)\n" &
-    "            l => group last  (group after files)\n" &
-    "            n => no grouping"
+dispatch entry, cmdName = "pathstrsort", help = {
+  "seperator": """
+set path seperator
+  default for windows     = '\'
+  default for non-windows = '/'""",
+
+  "groupDir": """
+set directory grouping option
+  f => group first (group before files)
+  l => group last  (group after files)
+  n => no grouping"""
 }
