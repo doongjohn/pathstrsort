@@ -70,8 +70,8 @@ proc pathstrsort(
 dispatch pathstrsort, help = {
   "seperator":
     "set path seperator\n" &
-    "  default for windows     = \'\\\'\n" &
-    "  default for non-windows = \'/\'",
+    "  default for windows     = '\\'\n" &
+    "  default for non-windows = '/'",
   "groupDir":
     "set directory grouping option\n" &
     "  (default) f => group first (group before files)\n" &
