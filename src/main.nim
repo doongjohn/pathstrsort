@@ -10,6 +10,7 @@ import std/strutils
 import std/streams
 import std/terminal
 import sorter
+import fastio
 import cligen
 
 # options
@@ -32,18 +33,18 @@ proc main =
 
   # sort paths
   case optGroupDir:
-  of 'n':
-    paths.sortPathsAscii()
   of 'f':
     paths.sortPathsGroupDirFirst(optSeperator)
   of 'l':
     paths.sortPathsGroupDirLast(optSeperator)
+  of 'n':
+    paths.sortPathsAscii()
   else:
     discard
 
   # output result
   for line in paths:
-    echo line
+    stdoutWriteLine(line)
 
 proc pathstrsort(
   seperator = '\0',
