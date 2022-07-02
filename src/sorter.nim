@@ -25,13 +25,13 @@ proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inli
       if aLastSep != bLastSep:
         if a.startsWith(b, bLastSep + 1): return 0
         if b.startsWith(a, aLastSep + 1): return 1
-    elif aSepCount == 0 and bSepCount == 0:
-      # sort ascii
-      if a > b: return 1
-      if a < b: return 0
-    # group directories first
-    if aSepCount == 0: return 1
-    if bSepCount == 0: return 0
+    elif aSepCount != 0 or bSepCount != 0:
+      # group directories first
+      if aSepCount == 0: return 1
+      if bSepCount == 0: return 0
+    # sort ascii
+    if a > b: return 1
+    if a < b: return 0
 
 proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inline.} =
   paths.sort do (a, b: string) -> int:
@@ -44,10 +44,10 @@ proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inlin
       if aLastSep != bLastSep:
         if a.startsWith(b, bLastSep + 1): return 1
         if b.startsWith(a, aLastSep + 1): return 0
-    elif aSepCount == 0 and bSepCount == 0:
-      # sort ascii
-      if a > b: return 1
-      if a < b: return 0
-    # group directories last
-    if aSepCount == 0: return 0
-    if bSepCount == 0: return 1
+    elif aSepCount != 0 or bSepCount != 0:
+      # group directories last
+      if aSepCount == 0: return 0
+      if bSepCount == 0: return 1
+    # sort ascii
+    if a > b: return 1
+    if a < b: return 0
