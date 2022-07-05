@@ -9,10 +9,21 @@ proc startsWith(str: openArray[char], prefix: openArray[char], prefixLen: int): 
     if i >= sLen or str[i] != prefix[i]: return false
     inc i
 
+var asciiSorter: proc (a, b: string): int = nil
+
+# TODO: add option to ignore case
+proc setAsciiSorter*(ascendingOrder: bool) =
+  if ascendingOrder:
+    asciiSorter = proc (a, b: string): int =
+      if a > b: return 1
+      if a < b: return 0
+  else:
+    asciiSorter = proc (a, b: string): int =
+      if a < b: return 1
+      if a > b: return 0
+
 proc sortPathsAscii*(paths: var seq[string]) {.inline.} =
-  paths.sort do (a, b: string) -> int:
-    if a > b: return 1
-    if a < b: return 0
+  paths.sort asciiSorter
 
 proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inline.} =
   paths.sort do (a, b: string) -> int:
@@ -30,8 +41,7 @@ proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inli
       if aSepCount == 0: return 1
       if bSepCount == 0: return 0
     # sort ascii
-    if a > b: return 1
-    if a < b: return 0
+    return asciiSorter(a, b)
 
 proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inline.} =
   paths.sort do (a, b: string) -> int:
@@ -49,5 +59,4 @@ proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inlin
       if aSepCount == 0: return 0
       if bSepCount == 0: return 1
     # sort ascii
-    if a > b: return 1
-    if a < b: return 0
+    return asciiSorter(a, b)

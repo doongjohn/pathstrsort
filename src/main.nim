@@ -8,9 +8,9 @@
 import std/tables
 import std/strutils
 import std/terminal
-import sorter
 import faststreams
 import faststreams/textio
+import sorter
 import cligen
 
 # options
@@ -52,7 +52,8 @@ proc main =
 
 proc entry(
   seperator = '\0',
-  groupDir = 'f'
+  groupDir = 'f',
+  ascendingOrder = true
 ) =
   # apply options
   if seperator != '\0':
@@ -66,6 +67,9 @@ proc entry(
     echo "error: invalid option for groupDir"
     echo "       must be one of ['f', 'l', 'n']"
     quit(1)
+
+  # set ascii sorter
+  setAsciiSorter(ascendingOrder)
 
   # run program
   main()
