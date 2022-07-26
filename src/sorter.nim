@@ -12,6 +12,7 @@ proc startsWith(str: openArray[char], prefix: openArray[char], prefixLen: int): 
 var asciiSorter: proc (a, b: string): int = nil
 
 # TODO: add option to ignore case
+# TODO: add natural sorting: https://rosettacode.org/wiki/Natural_sorting#Nim
 proc setAsciiSorter*(ascendingOrder: bool) =
   if ascendingOrder:
     asciiSorter = proc (a, b: string): int =
