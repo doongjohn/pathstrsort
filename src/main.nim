@@ -2,9 +2,6 @@
 # - it assumes there are no duplicate file names (in a same directory)
 # - it assumes there are no empty directories
 
-# TODO:
-# - [ ] implement several sorting options
-
 import std/tables
 import std/strutils
 import std/terminal
@@ -14,8 +11,10 @@ import sorter
 import cligen
 
 # options
-var optSeperator: char
-var optGroupDir: char
+var opt: tuple[
+  seperator: char,
+  groupDir: char,
+]
 
 proc main =
   if stdin.isatty():
@@ -32,11 +31,11 @@ proc main =
     paths.add(strip(line))
 
   # sort paths
-  case optGroupDir:
+  case opt.groupDir:
   of 'f':
-    paths.sortPathsGroupDirFirst(optSeperator)
+    paths.sortPathsGroupDirFirst(opt.seperator)
   of 'l':
-    paths.sortPathsGroupDirLast(optSeperator)
+    paths.sortPathsGroupDirLast(opt.seperator)
   of 'n':
     paths.sortPathsAscii()
   else:
@@ -57,12 +56,12 @@ proc entry(
 ) =
   # apply options
   if seperator != '\0':
-    optSeperator = seperator
+    opt.seperator = seperator
   else:
-    optSeperator = when defined(windows): '\\' else: '/'
+    opt.seperator = when defined(windows): '\\' else: '/'
 
   if groupDir in ['f', 'l', 'n']:
-    optGroupDir = groupDir
+    opt.groupDir = groupDir
   else:
     echo "error: invalid option for groupDir"
     echo "       must be one of ['f', 'l', 'n']"
