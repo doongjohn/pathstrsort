@@ -5,6 +5,24 @@ this program sorts path strings
 - it assumes there are no duplicate file names (in a same directory)
 - it assumes there are no empty directories
 
+```
+Usage:
+  pathstrsort [optional-params]
+Options:
+  -h, --help                          print this cligen-erated help
+  --help-syntax                       advanced: prepend,plurals,..
+  -s=, --seperator=     char  '\x00'  set path seperator
+                                        default for windows     = '\'
+                                        default for non-windows = '/'
+  -g=, --groupDir=      char  'f'     set directory grouping option
+                                        f => group first (group before files)
+                                        l => group last  (group after files)
+                                        n => no grouping
+  -i, --ignoreCase      bool  true    set ignoreCase
+  -n, --naturalSorting  bool  true    set naturalSorting
+  -a, --ascendingOrder  bool  true    set ascendingOrder
+```
+
 **example**: sorting [`nim/nimdoc/`](https://github.com/nim-lang/Nim/tree/devel/nimdoc)
 
 `fd -t=f`
