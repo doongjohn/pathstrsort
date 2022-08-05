@@ -15,4 +15,4 @@ requires "faststreams"
 requires "cligen"
 
 task release, "release build":
-  exec "nim c --cc:clang -o:pathstrsort -d:danger --passL:-s src/main.nim"
+  exec "nim c -o:pathstrsort -d:danger -d:lto --passL:-s src/main.nim"

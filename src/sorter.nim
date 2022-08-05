@@ -1,5 +1,8 @@
 import std/algorithm
 import std/strutils
+import opts
+import natsort
+
 
 proc startsWith(str: openArray[char], prefix: openArray[char], prefixLen: int): bool =
   let sLen = str.len
@@ -9,24 +12,38 @@ proc startsWith(str: openArray[char], prefix: openArray[char], prefixLen: int): 
     if i >= sLen or str[i] != prefix[i]: return false
     inc i
 
-var asciiSorter: proc (a, b: string): int = nil
 
-# TODO: add option to ignore case
-# TODO: add natural sorting: https://rosettacode.org/wiki/Natural_sorting#Nim
-proc setAsciiSorter*(ascendingOrder: bool) =
-  if ascendingOrder:
-    asciiSorter = proc (a, b: string): int =
-      if a > b: return 1
-      if a < b: return 0
+var stringSorter:
+  proc (a, b: string): int = nil
+
+
+proc cmpAscii(a, b: string): int =
+  var a = a
+  var b = b
+  if opt.ignoreCase:
+    a = a.toLowerAscii()
+    b = b.toLowerAscii()
+
+  if a > b:
+    result = 1
+  elif a < b:
+    result = -1
   else:
-    asciiSorter = proc (a, b: string): int =
-      if a < b: return 1
-      if a > b: return 0
+    result = 0
 
-proc sortPathsAscii*(paths: var seq[string]) {.inline.} =
-  paths.sort asciiSorter
 
-proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inline.} =
+proc initSorter*() =
+  if opt.naturalSorting:
+    stringSorter = cmpNatural
+  else:
+    stringSorter = cmpAscii
+
+
+proc sortPaths*(paths: var seq[string]) =
+  paths.sort stringSorter
+
+
+proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) =
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
@@ -42,9 +59,12 @@ proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) {.inli
       if aSepCount == 0: return 1
       if bSepCount == 0: return 0
     # sort ascii
-    return asciiSorter(a, b)
+    result = stringSorter(a, b)
+    if not opt.ascendingOrder:
+      result *= -1
 
-proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inline.} =
+
+proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) =
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
@@ -60,4 +80,6 @@ proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) {.inlin
       if aSepCount == 0: return 0
       if bSepCount == 0: return 1
     # sort ascii
-    return asciiSorter(a, b)
+    result = stringSorter(a, b)
+    if not opt.ascendingOrder:
+      result *= -1
