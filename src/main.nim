@@ -28,6 +28,9 @@ proc main =
     line.stripLineEnd()
     paths.add(line)
 
+  # init sorter
+  initSorter()
+
   # sort paths
   case opt.groupDir:
   of 'f':
@@ -71,9 +74,6 @@ proc entry(
   opt.ignoreCase = ignoreCase
   opt.naturalSorting = naturalSorting
   opt.ascendingOrder = ascendingOrder
-
-  # init sorter
-  initSorter()
 
   # run program
   main()
