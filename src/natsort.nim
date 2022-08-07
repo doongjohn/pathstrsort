@@ -1,7 +1,6 @@
 # natural sorting algorithm from rosettacode
 # https://rosettacode.org/wiki/Natural_sorting#Nim
 
-import std/algorithm
 import std/parseutils
 import std/pegs
 import std/strutils
@@ -10,7 +9,9 @@ import opts
 
 
 type
-  Kind = enum fString, fNumber
+  Kind = enum
+    fString,
+    fNumber,
 
   KeyItem = object
     case kind: Kind
@@ -22,7 +23,7 @@ type
 
 func cmp(a, b: Key): int =
   ## Compare two keys.
-  for i in 0..<min(a.len, b.len):
+  for i in 0 ..< min(a.len, b.len):
     let ai = a[i]
     let bi = b[i]
     if ai.kind == bi.kind:
@@ -30,13 +31,10 @@ func cmp(a, b: Key): int =
         cmp(ai.str, bi.str)
       else:
         cmp(ai.num, bi.num)
-      if result != 0: return
+      if result != 0:
+        return
     else:
       return if ai.kind == fString: 1 else: -1
-  result = if a.len < b.len:
-    -1
-  else:
-    (if a.len == b.len: 0 else: 1)
 
 
 proc natOrderKey(s: string): Key =
@@ -68,7 +66,7 @@ proc natOrderKey(s: string): Key =
     if n != 0:
       result.add KeyItem(kind: fString, str: s[idx..<(idx + n)])
       inc idx, n
-    n = s.parseInt(val, start = idx)
+    n = s.parseInt(val, start = idx) # FIXME: this can result integerOutOfRangeError
     if n != 0:
       result.add KeyItem(kind: fNumber, num: val)
       inc idx, n
