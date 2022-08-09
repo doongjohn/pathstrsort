@@ -1,6 +1,9 @@
 # natural sorting algorithm from rosettacode
 # https://rosettacode.org/wiki/Natural_sorting#Nim
 
+# TODO: use this algorithm
+# https://github.com/sourcefrog/natsort
+
 import std/parseutils
 import std/pegs
 import std/strutils
