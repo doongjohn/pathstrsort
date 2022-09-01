@@ -31,6 +31,9 @@ proc cmpAscii(a, b: string): int =
   else:
     result = 0
 
+  if not opt.ascendingOrder:
+    result *= -1
+
 
 proc initSorter*() =
   if opt.naturalSorting:
@@ -60,8 +63,6 @@ proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) =
       if bSepCount == 0: return 0
     # sort ascii
     result = stringSorter(a, b)
-    if not opt.ascendingOrder:
-      result *= -1
 
 
 proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) =
@@ -81,5 +82,3 @@ proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) =
       if bSepCount == 0: return 1
     # sort ascii
     result = stringSorter(a, b)
-    if not opt.ascendingOrder:
-      result *= -1

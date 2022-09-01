@@ -6,7 +6,10 @@
 # https://github.com/yobacca/natural-orderby
 
 import std/unicode
-# import opts
+import opts
+
+
+# TODO: add ignoreCase option
 
 
 proc isDigitChar(a: Rune): bool =
@@ -48,7 +51,7 @@ proc compareRight(a, b: string): int =
       return bias
 
 
-proc cmpNatural*(a, b: string): int =
+proc cmpNaturalAux(a, b: string): int =
   var
     ia = 0
     ib = 0
@@ -94,3 +97,8 @@ proc cmpNatural*(a, b: string): int =
 
     inc ia
     inc ib
+
+proc cmpNatural*(a, b: string): int =
+  result = cmpNaturalAux(a, b)
+  if not opt.ascendingOrder:
+    result *= -1
