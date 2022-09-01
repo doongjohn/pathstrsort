@@ -1,80 +1,96 @@
-# natural sorting algorithm from rosettacode
-# https://rosettacode.org/wiki/Natural_sorting#Nim
-
-# TODO: use this algorithm
+# this is a nim port of natcompare.js from this repo
 # https://github.com/sourcefrog/natsort
 
-import std/parseutils
-import std/pegs
-import std/strutils
-import std/unidecode
-import opts
+# other algorithms
+# https://github.com/bubkoo/natsort
+# https://github.com/yobacca/natural-orderby
+
+import std/unicode
+# import opts
 
 
-type
-  Kind = enum
-    fString,
-    fNumber,
-
-  KeyItem = object
-    case kind: Kind
-    of fString: str: string
-    of fNumber: num: Natural
-
-  Key = seq[KeyItem]
+proc isDigitChar(a: Rune): bool =
+  var charCode = a.int32
+  if charCode in 48 .. 57:
+    return true
+  else:
+    return false
 
 
-func cmp(a, b: Key): int =
-  ## Compare two keys.
-  for i in 0 ..< min(a.len, b.len):
-    let ai = a[i]
-    let bi = b[i]
-    if ai.kind == bi.kind:
-      result = if ai.kind == fString:
-        cmp(ai.str, bi.str)
-      else:
-        cmp(ai.num, bi.num)
-      if result != 0:
-        return
-    else:
-      return if ai.kind == fString: 1 else: -1
+proc compareRight(a, b: string): int =
+  var bias = 0
+  var ia = 0
+  var ib = 0
 
+  var ca: Rune
+  var cb: Rune
 
-proc natOrderKey(s: string): Key =
-  ## Return the natural order key for a string.
-  # Process 'ʒ' separately as "unidecode" converts it to 'z'.
-  var s = s.replace("ʒ", "s")
+  while true:
+    defer:
+      inc ia
+      inc ib
 
-  # Transform UTF-8 text into ASCII text.
-  s = s.unidecode()
-
-  # Remove leading and trailing white spaces.
-  s = s.strip()
-
-  # Make all whitespace characters equivalent and remove adjacent spaces.
-  s = s.replace(peg"\s+", " ")
-
-  # Switch to lower case.
-  if opt.ignoreCase:
-    s = s.toLowerAscii()
-
-  # Remove leading "the ".
-  if s.startsWith("the ") and s.len > 4: s = s[4..^1]
-
-  # Split into fields.
-  var idx = 0
-  var val: int
-  while idx < s.len:
-    var n = s.skipUntil(Digits, start = idx)
-    if n != 0:
-      result.add KeyItem(kind: fString, str: s[idx..<(idx + n)])
-      inc idx, n
-    n = s.parseInt(val, start = idx) # FIXME: this can result integerOutOfRangeError
-    if n != 0:
-      result.add KeyItem(kind: fNumber, num: val)
-      inc idx, n
+    ca = a.runeAt(ia)
+    cb = b.runeAt(ib)
+    if not isDigitChar(ca) and not isDigitChar(cb):
+      return bias
+    if not isDigitChar(ca):
+      return -1
+    if not isDigitChar(cb):
+      return +1
+    if ca.int32 < cb.int32:
+      if bias == 0:
+        bias = -1
+    if ca.int32 > cb.int32:
+      if bias == 0:
+        bias = +1
+    if ca.int32 == 0 and cb.int32 == 0:
+      return bias
 
 
 proc cmpNatural*(a, b: string): int =
-  ## Natural order comparison function.
-  result = cmp(a.natOrderKey, b.natOrderKey)
+  var
+    ia = 0
+    ib = 0
+    nza = 0
+    nzb = 0
+    ca: Rune
+    cb: Rune
+
+  while true:
+    nza = 0
+    nzb = 0
+    ca = a.runeAt(ia)
+    cb = b.runeAt(ib)
+
+    while isWhiteSpace(ca) or ca.int32 == '0'.int32:
+      if ca.int32 == '0'.int32:
+        inc nza
+      else:
+        nza = 0
+      inc ia
+      ca = a.runeAt(ia)
+
+    while isWhiteSpace(cb) or cb.int32 == '0'.int32:
+      if cb.int32 == '0'.int32:
+        inc nzb
+      else:
+        nzb = 0
+      inc ib
+      cb = b.runeAt(ib)
+
+    if isDigitChar(ca) and isDigitChar(cb):
+      result = compareRight(a[ia .. ^1], b[ib .. ^1])
+      if result != 0:
+        return result
+
+    if ca.int32 == 0 and cb.int32 == 0:
+      return nza - nzb
+
+    if ca.int32 < cb.int32:
+      return -1
+    elif ca.int32 > cb.int32:
+      return +1
+
+    inc ia
+    inc ib

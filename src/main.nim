@@ -2,14 +2,15 @@
 # - it assumes there are no duplicate file names (in a same directory)
 # - it assumes there are no empty directories
 
-import std/tables
-import std/strutils
-import std/terminal
-import faststreams
-import faststreams/textio
-import opts
-import sorter
-import cligen
+import
+  std/tables,
+  std/strutils,
+  std/terminal,
+  faststreams,
+  faststreams/textio,
+  opts,
+  sorter,
+  cligen
 
 
 proc main =
