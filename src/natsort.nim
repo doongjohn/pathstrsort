@@ -30,10 +30,6 @@ proc compareRight(a, b: string): int =
     ca = a.runeAt(ia)
     cb = b.runeAt(ib)
 
-    if opt.ignoreCase:
-      ca = ca.toLower()
-      cb = cb.toLower()
-
     if not isDigitChar(ca) and
        not isDigitChar(cb):
       return bias
@@ -69,10 +65,6 @@ proc cmpNaturalAux(a, b: string): int =
     nzb = 0
     ca = a.runeAt(ia)
     cb = b.runeAt(ib)
-
-    if opt.ignoreCase:
-      ca = ca.toLower()
-      cb = cb.toLower()
 
     while isWhiteSpace(ca) or ca.int32 == '0'.int32:
       if ca.int32 == '0'.int32:

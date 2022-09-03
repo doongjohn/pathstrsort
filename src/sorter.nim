@@ -1,15 +1,21 @@
-import std/algorithm
-import std/strutils
-import opts
-import natsort
+import std/[
+  algorithm,
+  strutils,
+]
+
+import
+  opts,
+  natsort
 
 
 proc startsWith(str: openArray[char], prefix: openArray[char], prefixLen: int): bool =
   let sLen = str.len
   var i = 0
   while true:
-    if i >= prefixLen: return true
-    if i >= sLen or str[i] != prefix[i]: return false
+    if i >= prefixLen:
+      return true
+    if i >= sLen or str[i] != prefix[i]:
+      return false
     inc i
 
 
@@ -20,9 +26,6 @@ var stringSorter:
 proc cmpAscii(a, b: string): int =
   var a = a
   var b = b
-  if opt.ignoreCase:
-    a = a.toLowerAscii()
-    b = b.toLowerAscii()
 
   if a > b:
     result = 1
@@ -46,7 +49,9 @@ proc sortPaths*(paths: var seq[string]) =
   paths.sort stringSorter
 
 
-proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) =
+proc sortPathsGroupDirFirst*(paths: var seq[string]) =
+  let pathSeperator = opt.seperator
+
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)
@@ -65,7 +70,9 @@ proc sortPathsGroupDirFirst*(paths: var seq[string], pathSeperator: char) =
     result = stringSorter(a, b)
 
 
-proc sortPathsGroupDirLast*(paths: var seq[string], pathSeperator: char) =
+proc sortPathsGroupDirLast*(paths: var seq[string]) =
+  let pathSeperator = opt.seperator
+
   paths.sort do (a, b: string) -> int:
     let aSepCount = a.count(pathSeperator)
     let bSepCount = b.count(pathSeperator)

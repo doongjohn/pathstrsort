@@ -1,5 +1,6 @@
 import std/[
   tables,
+  unicode,
   strutils,
   terminal,
 ]
@@ -23,8 +24,13 @@ proc main =
   # read input
   var paths: seq[string]
   for line in stdinStream.lines:
-    var line = line
-    line.stripLineEnd()
+    var line = strutils.strip(line)
+
+    # ignore case
+    if opt.ignoreCase:
+      line = line.toLower()
+
+    # add to seq
     paths.add(line)
 
   # init sorter
@@ -33,9 +39,9 @@ proc main =
   # sort paths
   case opt.groupDir:
   of 'f':
-    paths.sortPathsGroupDirFirst(opt.seperator)
+    paths.sortPathsGroupDirFirst()
   of 'l':
-    paths.sortPathsGroupDirLast(opt.seperator)
+    paths.sortPathsGroupDirLast()
   of 'n':
     paths.sortPaths()
   else:
@@ -46,8 +52,7 @@ proc main =
 
   # output result
   for line in paths:
-    stdoutStream.write(line)
-    stdoutStream.write('\n')
+    stdoutStream.write(line & '\n')
 
 
 proc entry(
