@@ -1,16 +1,14 @@
-# this program sorts path strings
-# - it assumes there are no duplicate file names (in a same directory)
-# - it assumes there are no empty directories
+import std/[
+  tables,
+  strutils,
+  terminal,
+]
 
 import
-  std/tables,
-  std/strutils,
-  std/terminal,
   faststreams,
   faststreams/textio,
   opts,
-  sorter,
-  cligen
+  sorter
 
 
 proc main =
@@ -81,6 +79,8 @@ proc entry(
 
 
 # parse options
+import cligen
+
 dispatch entry, cmdName = "pathstrsort", help = {
   "seperator": """
 set path seperator

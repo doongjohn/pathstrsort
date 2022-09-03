@@ -5,28 +5,22 @@
 # https://github.com/bubkoo/natsort
 # https://github.com/yobacca/natural-orderby
 
+
 import std/unicode
 import opts
 
 
-# TODO: add ignoreCase option
-
-
-proc isDigitChar(a: Rune): bool =
-  var charCode = a.int32
-  if charCode in 48 .. 57:
-    return true
-  else:
-    return false
+template isDigitChar(a: Rune): bool =
+  a.int32 in 48 .. 57
 
 
 proc compareRight(a, b: string): int =
-  var bias = 0
-  var ia = 0
-  var ib = 0
-
-  var ca: Rune
-  var cb: Rune
+  var
+    bias = 0
+    ia = 0
+    ib = 0
+    ca: Rune
+    cb: Rune
 
   while true:
     defer:
@@ -35,7 +29,13 @@ proc compareRight(a, b: string): int =
 
     ca = a.runeAt(ia)
     cb = b.runeAt(ib)
-    if not isDigitChar(ca) and not isDigitChar(cb):
+
+    if opt.ignoreCase:
+      ca = ca.toLower()
+      cb = cb.toLower()
+
+    if not isDigitChar(ca) and
+       not isDigitChar(cb):
       return bias
     if not isDigitChar(ca):
       return -1
@@ -61,10 +61,18 @@ proc cmpNaturalAux(a, b: string): int =
     cb: Rune
 
   while true:
+    defer:
+      inc ia
+      inc ib
+
     nza = 0
     nzb = 0
     ca = a.runeAt(ia)
     cb = b.runeAt(ib)
+
+    if opt.ignoreCase:
+      ca = ca.toLower()
+      cb = cb.toLower()
 
     while isWhiteSpace(ca) or ca.int32 == '0'.int32:
       if ca.int32 == '0'.int32:
@@ -95,8 +103,6 @@ proc cmpNaturalAux(a, b: string): int =
     elif ca.int32 > cb.int32:
       return +1
 
-    inc ia
-    inc ib
 
 proc cmpNatural*(a, b: string): int =
   result = cmpNaturalAux(a, b)
