@@ -11,7 +11,7 @@ import opts
 
 
 template isDigitChar(a: Rune): bool =
-  a.int32 in 48 .. 57
+  a.int32 in '0'.ord .. '9'.ord
 
 
 proc compareRight(a, b: string): int =
